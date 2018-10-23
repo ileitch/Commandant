@@ -156,3 +156,9 @@ internal func informativeUsageError<ClientError>(_ option: Option<Bool>) -> Comm
 	let key = option.key
 	return informativeUsageError((option.defaultValue ? "--no-\(key)" : "--\(key)"), option: option)
 }
+
+/// Constructs an error that describes how to use the given BoolValuye option.
+internal func informativeUsageError<ClientError>(_ option: Option<BoolValue>) -> CommandantError<ClientError> {
+	let key = option.key
+	return informativeUsageError((option.defaultValue.defaultValue ? "--no-\(key)" : "--\(key)"), option: option)
+}

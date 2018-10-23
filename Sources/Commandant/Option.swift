@@ -271,4 +271,36 @@ extension CommandMode {
 			return .failure(informativeUsageError(option))
 		}
 	}
+
+	/// Evaluates the given boolean option in the given mode.
+	///
+	/// If parsing command line arguments, and no value was specified on the command
+	/// line, the option's `defaultValue` is used.
+	public static func <| <ClientError>(mode: CommandMode, option: Option<BoolValue>) -> Result<BoolValue, CommandantError<ClientError>> {
+		switch mode {
+		case let .arguments(arguments):
+			if let value = arguments.consumeBoolean(forKey: option.key) {
+				var boolValue = option.defaultValue
+				boolValue.value = value
+				boolValue.explicit = true
+				return .success(boolValue)
+			} else {
+				return .success(option.defaultValue)
+			}
+
+		case .usage:
+			return .failure(informativeUsageError(option))
+		}
+	}
+}
+
+public struct BoolValue {
+	public var defaultValue: Bool
+	public var value: Bool
+	public var explicit: Bool = false
+
+	public init(_ defaultValue: Bool) {
+		self.defaultValue = defaultValue
+		self.value = defaultValue
+	}
 }
